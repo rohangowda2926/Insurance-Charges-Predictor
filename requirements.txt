@@ -5,5 +5,5 @@ pydantic
 python-multipart
 jinja2
 joblib
-scikit-learn
+scikit-learn==1.4.0
 numpy
