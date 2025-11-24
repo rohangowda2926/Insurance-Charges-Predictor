@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Insurance Charges Predictor</title>
+
+  <!-- Google Font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --card-bg: #020617;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.08);
+      --accent-strong: #0ea5e9;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-subtle: rgba(148, 163, 184, 0.35);
+      --success-bg: #ecfdf5;
+      --success-border: #bbf7d0;
+      --success-text: #166534;
+      --warn-bg: #fffbeb;
+      --warn-border: #facc15;
+      --warn-text: #92400e;
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
+      --danger-text: #b91c1c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 32px 16px;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #1e293b, #020617 60%);
+      color: var(--text-main);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 820px;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .title {
+      margin: 0;
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 18px;
+    }
+
+    .card {
+      background: linear-gradient(135deg, #020617, #020817);
+      border-radius: 18px;
+      padding: 22px 22px 24px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.85);
+    }
+
+    .side-card {
+      background: radial-gradient(circle at top, #0b1120, #020617 70%);
+      border-radius: 18px;
+      padding: 18px 18px 20px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.8);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .hint {
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    .input,
+    .select {
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-main);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease,
+        background 0.15s ease, transform 0.05s ease;
+    }
+
+    .input:focus,
+    .select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
+      background: #020617;
+      transform: translateY(-1px);
+    }
+
+    .actions {
+      margin-top: 18px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      position: relative;
+      padding: 9px 22px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      color: #0b1120;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(8, 47, 73, 0.85);
+      transition: transform 0.08s ease, box-shadow 0.08s ease,
+        filter 0.08s ease;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      box-shadow: 0 16px 38px rgba(8, 47, 73, 0.95);
+    }
+
+    .btn-primary:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 10px 24px rgba(8, 47, 73, 0.8);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .btn-icon {
+      font-size: 16px;
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+    }
+
+    .result {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      display: none;
+      border: 1px solid var(--success-border);
+      background: var(--success-bg);
+      color: var(--success-text);
+    }
+
+    .insight {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .chip {
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 500;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .chip.low {
+      border-color: #22c55e;
+      color: #22c55e;
+    }
+
+    .chip.medium {
+      border-color: #facc15;
+      color: #facc15;
+    }
+
+    .chip.high {
+      border-color: #f97316;
+      color: #fdba74;
+    }
+
+    .side-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .side-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .side-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .side-list li {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 18px 10px;
+      }
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .card {
+        padding: 18px 16px 22px;
+      }
+      .side-card {
+        padding: 16px 14px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 class="title">Insurance Charges Predictor</h1>
+      <p class="subtitle">
+        Estimate yearly medical insurance charges in USD based on profile and lifestyle.
+      </p>
+    </header>
+
+    <div class="layout">
+      <!-- Left: main form -->
+      <section class="card">
+        <form id="predict-form">
+          <div class="grid">
+            <div class="field">
+              <div class="label-row">
+                <span class="label">Age</span>
+                <span class="hint">18–100 years</span>
+              </div>
+              <input type="number" name="age" min="18" max="100" required class="input" />
+            </div>
+
+            <div class="field">
+              <div class="label-row">
+                <span class="label">Sex</span>
+              </div>
+              <select name="sex" class="select">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <div class="label-row">
+                <span class="label">BMI</span>
+                <span class="hint">Body Mass Index</span>
+              </div>
+              <input type="number" step="0.1" name="bmi" min="10" max="60" required class="input" />
+            </div>
+
+            <div class="field">
+              <div class="label-row">
+                <span class="label">Children</span>
+              </div>
+              <input type="number" name="children" min="0" max="10" required class="input" />
+            </div>
+
+            <div class="field">
+              <div class="label-row">
+                <span class="label">Smoker</span>
+              </div>
+              <select name="smoker" class="select">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <div class="label-row">
+                <span class="label">Region</span>
+              </div>
+              <select name="region" class="select">
+                <option value="southeast">Southeast</option>
+                <option value="southwest">Southwest</option>
+                <option value="northwest">Northwest</option>
+                <option value="northeast">Northeast</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="actions">
+            <span class="pill">Client-side ML prediction</span>
+            <button type="submit" class="btn-primary">
+              <span class="btn-icon">📊</span>
+              <span>Predict Charges</span>
+            </button>
+          </div>
+        </form>
+
+        <div id="result" class="result"></div>
+        <div id="insight" class="insight"></div>
+      </section>
+
+      <!-- Right: dynamic insight panel -->
+      <aside class="side-card">
+        <div class="side-title">Profile insights</div>
+        <p class="side-text" id="insight-text">
+          Fill in your details and run a prediction to see risk level and key drivers.
+        </p>
+
+        <div class="chip-row" id="chip-row">
+          <!-- chips inserted by JS -->
+        </div>
+
+        <ul class="side-list">
+          <li>• Non-smokers typically receive significantly lower charges.</li>
+          <li>• Higher BMI and age are associated with higher risk.</li>
+          <li>• Region captures pricing differences between markets.</li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+
+  <script src="static/app.js"></script>
+</body>
+</html>
