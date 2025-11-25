@@ -13,8 +13,8 @@ A machine learning web application that predicts yearly medical insurance charge
 
 ## 🚀 Live Demo
 
+- **Frontend**: [View Live Application](https://rohangowda2926.github.io/Insurance-Prediction-/)
 - **Backend API**: Hosted on Render
-- **Frontend**: GitHub Pages (requires public repository)
 
 ## 📊 Model Performance
 
