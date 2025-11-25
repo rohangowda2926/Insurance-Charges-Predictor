@@ -260,19 +260,17 @@ python extract_coefficients.py
 ## 🚀 Deployment
 
 ### Full-Stack Deployment (Render)
-The complete application (frontend + backend + ML model) is deployed on Render:
+The complete application (frontend + backend + ML model) is **deployed and live** on Render:
 
-1. **Connect Repository**: Link your GitHub repo to Render
-2. **Build Command**: `pip install -r requirements.txt`
-3. **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-4. **Environment**: Python 3.8+
-5. **Auto-Deploy**: Enabled for main branch
+- **🌐 Live URL**: https://insurance-prediction-paiv.onrender.com/
+- **⚡ Auto-Deploy**: Enabled from GitHub main branch
+- **🔄 CI/CD**: Automatic builds on code changes
 
-#### Render Configuration
-- **Service Type**: Web Service
-- **Runtime**: Python 3
-- **Build Command**: `cd app/app && pip install -r requirements.txt`
-- **Start Command**: `cd app/app && uvicorn main:app --host 0.0.0.0 --port $PORT`
+#### Deployment Configuration
+- **Platform**: Render Web Service
+- **Runtime**: Python 3.11
+- **Build**: `cd app/app && pip install -r requirements.txt`
+- **Start**: `cd app/app && uvicorn main:app --host 0.0.0.0 --port $PORT`
 
 ## 🤝 Contributing
 
