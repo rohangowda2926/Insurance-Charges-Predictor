@@ -18,11 +18,29 @@ A machine learning web application that predicts yearly medical insurance charge
 
 ## 📊 Model Performance
 
-The model uses a **Gradient Boosting Regressor** with the following features:
-- Age, BMI, Number of children
-- Sex (Male/Female)
-- Smoking status (Yes/No) 
-- Region (Northeast, Northwest, Southeast, Southwest)
+### Algorithm: Gradient Boosting Regressor
+
+**Key Metrics:**
+- **R² Score**: 0.8795 (87.95% variance explained)
+- **RMSE**: $4,325.87 (Root Mean Square Error)
+- **MAE**: $2,402.02 (Mean Absolute Error)
+
+**Features Used:**
+- **Age** (18-64 years)
+- **BMI** (Body Mass Index: 15.96-53.13)
+- **Children** (Number of dependents: 0-5)
+- **Sex** (Male/Female)
+- **Smoking Status** (Yes/No) - *Most important feature*
+- **Region** (Northeast, Northwest, Southeast, Southwest)
+
+### Feature Importance Analysis
+1. **Smoking Status**: 67.65% (smoker_yes: 46.11% + smoker_no: 21.54%)
+2. **BMI**: 19.07%
+3. **Age**: 11.70%
+4. **Children**: 1.01%
+5. **Region & Sex**: <1% each
+
+> **Key Finding**: Smokers pay ~3.2x more than non-smokers on average
 
 ## 🛠️ Tech Stack
 
@@ -50,23 +68,30 @@ Insurance-Prediction-/
 ├── app/
 │   └── app/
 │       ├── main.py              # FastAPI application
-│       ├── model.joblib         # Trained ML model
+│       ├── model.joblib         # Trained ML model (R²=0.88)
 │       ├── requirements.txt     # Python dependencies
 │       ├── static/
 │       │   └── app.js          # Frontend JavaScript
 │       └── templates/
 │           └── index.html      # Main HTML template
 ├── ml/
-│   ├── insurance.csv           # Training dataset
+│   ├── insurance.csv           # Training dataset (1,338 records)
 │   └── train_model.py          # Model training script
+├── notebooks/
+│   ├── model_evaluation.py     # Model metrics & visualizations
+│   └── eda_analysis.py         # Exploratory data analysis
 ├── docs/
 │   ├── index.html              # GitHub Pages version
+│   ├── model_evaluation.png    # Model performance plots
+│   ├── eda_analysis.png        # EDA visualizations
 │   └── static/
 │       └── app.js              # Frontend for GitHub Pages
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml          # GitHub Actions workflow
 ├── extract_coefficients.py     # Model analysis utility
+├── requirements.txt            # Root dependencies
+├── runtime.txt                 # Python version for deployment
 └── README.md
 ```
 
@@ -112,6 +137,24 @@ Insurance-Prediction-/
    python train_model.py
    ```
 
+### Model Evaluation & Analysis
+
+1. **Install analysis dependencies**
+   ```bash
+   cd notebooks/
+   pip install -r requirements.txt
+   ```
+
+2. **Run model evaluation**
+   ```bash
+   python model_evaluation.py
+   ```
+
+3. **Run EDA analysis**
+   ```bash
+   python eda_analysis.py
+   ```
+
 ## 📋 API Documentation
 
 ### Endpoints
@@ -144,25 +187,55 @@ Predicts insurance charges based on input features
 ## 🎯 Usage Examples
 
 ### Example 1: Low Risk Profile
-- Age: 25, BMI: 22, Non-smoker, 0 children
-- **Predicted Charge**: ~$3,000-5,000
+- **Input**: Age: 25, BMI: 22, Non-smoker, 0 children, Female, Southeast
+- **Predicted Charge**: ~$3,282
+- **Risk Level**: Low
 
 ### Example 2: High Risk Profile  
-- Age: 55, BMI: 35, Smoker, 3 children
-- **Predicted Charge**: ~$35,000-45,000
+- **Input**: Age: 55, BMI: 35, Smoker, 3 children, Male, Northwest
+- **Predicted Charge**: ~$39,871
+- **Risk Level**: High
 
-## 🔧 Model Analysis
+### Example 3: Moderate Risk Profile
+- **Input**: Age: 35, BMI: 28, Non-smoker, 2 children, Male, Northeast
+- **Predicted Charge**: ~$8,547
+- **Risk Level**: Moderate
 
-Use the `extract_coefficients.py` script to analyze model behavior:
+## 🔧 Model Analysis & Evaluation
 
+### Run Model Evaluation
+```bash
+cd notebooks/
+python model_evaluation.py
+```
+
+**Generates:**
+- Performance metrics (R², RMSE, MAE)
+- Actual vs Predicted plots
+- Residuals analysis
+- Feature importance visualization
+
+### Run EDA Analysis
+```bash
+cd notebooks/
+python eda_analysis.py
+```
+
+**Generates:**
+- Dataset statistics and insights
+- Distribution plots
+- Correlation analysis
+- Smoker vs non-smoker analysis
+
+### Extract Model Coefficients
 ```bash
 python extract_coefficients.py
 ```
 
-This script provides:
+**Provides:**
 - Feature importance analysis
 - Sample predictions
-- Model structure insights
+- Client-side model coefficients
 
 ## 🚀 Deployment
 
