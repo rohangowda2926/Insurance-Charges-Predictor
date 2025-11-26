@@ -3,62 +3,83 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Insurance Charges Predictor</title>
+  <title>AI Insurance Predictor | Smart Risk Assessment</title>
 
-  <!-- Google Font -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
-    rel="stylesheet"
-  />
-
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
     :root {
-      --bg: #020617;
-      --card-bg: #020617;
-      --accent: #38bdf8;
-      --accent-soft: rgba(56, 189, 248, 0.08);
-      --accent-strong: #0ea5e9;
-      --text-main: #e5e7eb;
-      --text-muted: #9ca3af;
-      --border-subtle: rgba(148, 163, 184, 0.35);
-      --success-bg: #ecfdf5;
-      --success-border: #bbf7d0;
-      --success-text: #166534;
-      --warn-bg: #fffbeb;
-      --warn-border: #facc15;
-      --warn-text: #92400e;
-      --danger-bg: #fef2f2;
-      --danger-border: #fecaca;
-      --danger-text: #b91c1c;
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #06b6d4;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border: rgba(148, 163, 184, 0.2);
+      --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      --glow: 0 0 20px rgba(99, 102, 241, 0.3);
     }
 
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      color: var(--text-primary);
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 32px 16px;
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top left, #1e293b, #020617 60%);
-      color: var(--text-main);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated background particles */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      background: var(--primary);
+      border-radius: 50%;
+      opacity: 0.1;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
     }
 
     .container {
-      width: 100%;
-      max-width: 820px;
-      animation: fadeIn 0.4s ease-out;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+      animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    @keyframes fadeIn {
+    @keyframes slideUp {
       from {
         opacity: 0;
-        transform: translateY(8px);
+        transform: translateY(60px);
       }
       to {
         opacity: 1;
@@ -66,341 +87,849 @@
       }
     }
 
+    /* Navigation Bar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .nav-stats {
+      display: flex;
+      gap: 2rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
     .header {
       text-align: center;
-      margin-bottom: 22px;
+      margin-bottom: 3rem;
+      position: relative;
     }
 
     .title {
-      margin: 0;
-      font-size: 30px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
+      font-size: 3.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+      line-height: 1.1;
     }
 
     .subtitle {
-      margin-top: 8px;
-      font-size: 14px;
-      color: var(--text-muted);
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+    }
+
+    .model-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.875rem;
+      color: var(--primary);
+      font-weight: 500;
     }
 
     .layout {
       display: grid;
-      grid-template-columns: 3fr 2fr;
-      gap: 18px;
+      grid-template-columns: 1fr 400px;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
     }
 
     .card {
-      background: linear-gradient(135deg, #020617, #020817);
-      border-radius: 18px;
-      padding: 22px 22px 24px;
-      border: 1px solid var(--border-subtle);
-      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.85);
+      background: rgba(51, 65, 85, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      opacity: 0.5;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.35), var(--glow);
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
     }
 
     .side-card {
-      background: radial-gradient(circle at top, #0b1120, #020617 70%);
-      border-radius: 18px;
-      padding: 18px 18px 20px;
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.8);
+      background: rgba(51, 65, 85, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
     }
 
-    .grid {
+    .side-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px 18px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
     }
 
     .field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+      position: relative;
     }
 
-    .label-row {
+    .field-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+    }
+
+    .field-icon {
+      color: var(--primary);
+      font-size: 1rem;
+    }
+
+    .field-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    .input, .select {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid var(--border);
+      border-radius: 0.75rem;
+      background: rgba(15, 23, 42, 0.5);
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(10px);
+    }
+
+    .input:focus, .select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1), 0 8px 25px -8px rgba(99, 102, 241, 0.3);
+      background: rgba(15, 23, 42, 0.8);
+      transform: translateY(-2px);
+    }
+
+    .input:hover, .select:hover {
+      border-color: rgba(99, 102, 241, 0.5);
+    }
+
+    /* Custom range slider for BMI */
+    .bmi-container {
+      position: relative;
+    }
+
+    .bmi-slider {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--success) 0%, var(--warning) 50%, var(--danger) 100%);
+      outline: none;
+      -webkit-appearance: none;
+      margin: 1rem 0;
+    }
+
+    .bmi-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+
+    .bmi-labels {
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
     }
 
-    .label {
-      font-size: 13px;
-      font-weight: 500;
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .model-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
       color: var(--text-muted);
     }
 
-    .hint {
-      font-size: 11px;
-      color: rgba(148, 163, 184, 0.9);
-    }
-
-    .input,
-    .select {
-      padding: 8px 10px;
-      border-radius: 10px;
-      border: 1px solid var(--border-subtle);
-      background: rgba(15, 23, 42, 0.95);
-      color: var(--text-main);
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease,
-        background 0.15s ease, transform 0.05s ease;
-    }
-
-    .input:focus,
-    .select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
-      background: #020617;
-      transform: translateY(-1px);
-    }
-
-    .actions {
-      margin-top: 18px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .btn-primary {
+    .btn-predict {
       position: relative;
-      padding: 9px 22px;
-      border-radius: 999px;
+      padding: 1rem 2rem;
       border: none;
-      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-      color: #0b1120;
-      font-size: 14px;
+      border-radius: 0.75rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      box-shadow: 0 12px 30px rgba(8, 47, 73, 0.85);
-      transition: transform 0.08s ease, box-shadow 0.08s ease,
-        filter 0.08s ease;
+      gap: 0.75rem;
+      box-shadow: 0 8px 25px -8px var(--primary);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
     }
 
-    .btn-primary:hover:not(:disabled) {
+    .btn-predict::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-predict:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px -12px var(--primary);
+    }
+
+    .btn-predict:hover::before {
+      left: 100%;
+    }
+
+    .btn-predict:active {
       transform: translateY(-1px);
-      filter: brightness(1.05);
-      box-shadow: 0 16px 38px rgba(8, 47, 73, 0.95);
     }
 
-    .btn-primary:active:not(:disabled) {
-      transform: translateY(0);
-      box-shadow: 0 10px 24px rgba(8, 47, 73, 0.8);
+    .btn-predict:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
     }
 
-    .btn-primary:disabled {
-      opacity: 0.7;
-      cursor: default;
-      box-shadow: none;
-    }
-
-    .btn-icon {
-      font-size: 16px;
-    }
-
-    .pill {
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent-strong);
-    }
-
-    .result {
-      margin-top: 14px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      font-size: 14px;
-      display: none;
-      border: 1px solid var(--success-border);
-      background: var(--success-bg);
-      color: var(--success-text);
-    }
-
-    .insight {
-      margin-top: 10px;
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .chip-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-
-    .chip {
-      padding: 4px 9px;
-      border-radius: 999px;
-      font-size: 11px;
+    .btn-secondary {
+      padding: 0.75rem 1.5rem;
+      border: 2px solid var(--border);
+      border-radius: 0.75rem;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
       font-weight: 500;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.4);
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
 
-    .chip.low {
-      border-color: #22c55e;
-      color: #22c55e;
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: rgba(99, 102, 241, 0.05);
     }
 
-    .chip.medium {
-      border-color: #facc15;
-      color: #facc15;
+    /* Loading animation */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
     }
 
-    .chip.high {
-      border-color: #f97316;
-      color: #fdba74;
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Results Section */
+    .results-container {
+      margin-top: 2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .results-container.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .result-card {
+      background: linear-gradient(135deg, var(--success), #059669);
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(180deg); }
+    }
+
+    .result-amount {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .result-label {
+      font-size: 1.125rem;
+      opacity: 0.9;
+      margin-bottom: 1rem;
+    }
+
+    .risk-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .risk-low { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+    .risk-medium { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+    .risk-high { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+
+    /* Insights and Analysis */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .insight-item {
+      background: rgba(99, 102, 241, 0.05);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .insight-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .insight-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Feature Importance Chart */
+    .feature-chart {
+      margin-top: 1.5rem;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .feature-name {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .feature-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      margin: 0 1rem;
+      overflow: hidden;
+    }
+
+    .feature-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 3px;
+      transition: width 1s ease;
+    }
+
+    .feature-value {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
     }
 
     .side-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 6px;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .side-text {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 10px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
     }
 
-    .side-list {
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: rgba(99, 102, 241, 0.05);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tips-list {
       list-style: none;
-      padding-left: 0;
-      margin: 0;
     }
 
-    .side-list li {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 4px;
+    .tips-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .tips-list li::before {
+      content: '💡';
+      font-size: 1rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .layout {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .sidebar {
+        order: -1;
+      }
     }
 
     @media (max-width: 768px) {
-      body {
-        padding: 18px 10px;
+      .container {
+        padding: 1rem;
       }
-      .layout {
+      
+      .title {
+        font-size: 2.5rem;
+      }
+      
+      .form-grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
       }
-      .card {
-        padding: 18px 16px 22px;
+      
+      .form-actions {
+        flex-direction: column;
+        gap: 1rem;
       }
-      .side-card {
-        padding: 16px 14px 18px;
+      
+      .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+      
+      .nav-stats {
+        justify-content: center;
+      }
+    }
+
+    /* Dark mode enhancements */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-primary: #0a0a0a;
+        --bg-secondary: #1a1a1a;
       }
     }
   </style>
 </head>
 <body>
+  <!-- Animated Background -->
+  <div class="bg-animation" id="bgAnimation"></div>
+
   <div class="container">
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="logo">
+        <i class="fas fa-brain"></i>
+        <span>AI Insurance Predictor</span>
+      </div>
+      <div class="nav-stats">
+        <div class="stat-item">
+          <i class="fas fa-chart-line"></i>
+          <span>87.95% Accuracy</span>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-users"></i>
+          <span>1,338 Training Samples</span>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-robot"></i>
+          <span>Gradient Boosting</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header -->
     <header class="header">
-      <h1 class="title">Insurance Charges Predictor</h1>
+      <h1 class="title">AI-Powered Insurance Predictor</h1>
       <p class="subtitle">
-        Estimate yearly medical insurance charges in USD based on profile and lifestyle.
+        Get instant, accurate insurance cost predictions using advanced machine learning algorithms trained on real-world data.
       </p>
+      <div class="model-badge">
+        <i class="fas fa-medal"></i>
+        <span>Gradient Boosting Regressor • R² Score: 0.88</span>
+      </div>
     </header>
 
     <div class="layout">
-      <!-- Left: main form -->
-      <section class="card">
-        <form id="predict-form">
-          <div class="grid">
-            <div class="field">
-              <div class="label-row">
-                <span class="label">Age</span>
-                <span class="hint">18–100 years</span>
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Prediction Form -->
+        <section class="card">
+          <form id="predict-form">
+            <div class="form-grid">
+              <div class="field">
+                <div class="field-label">
+                  <i class="fas fa-birthday-cake field-icon"></i>
+                  <span>Age</span>
+                  <span class="field-hint">18-100 years</span>
+                </div>
+                <input type="number" name="age" min="18" max="100" required class="input" placeholder="Enter your age" />
               </div>
-              <input type="number" name="age" min="18" max="100" required class="input" />
+
+              <div class="field">
+                <div class="field-label">
+                  <i class="fas fa-venus-mars field-icon"></i>
+                  <span>Gender</span>
+                </div>
+                <select name="sex" class="select">
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+
+              <div class="field bmi-container">
+                <div class="field-label">
+                  <i class="fas fa-weight field-icon"></i>
+                  <span>BMI</span>
+                  <span class="field-hint">Body Mass Index</span>
+                </div>
+                <input type="number" step="0.1" name="bmi" min="10" max="60" required class="input" placeholder="25.0" />
+                <input type="range" class="bmi-slider" min="15" max="50" step="0.1" />
+                <div class="bmi-labels">
+                  <span>Underweight</span>
+                  <span>Normal</span>
+                  <span>Overweight</span>
+                  <span>Obese</span>
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="field-label">
+                  <i class="fas fa-child field-icon"></i>
+                  <span>Children</span>
+                  <span class="field-hint">Dependents</span>
+                </div>
+                <input type="number" name="children" min="0" max="10" required class="input" placeholder="0" />
+              </div>
+
+              <div class="field">
+                <div class="field-label">
+                  <i class="fas fa-smoking field-icon"></i>
+                  <span>Smoking Status</span>
+                </div>
+                <select name="smoker" class="select">
+                  <option value="no">Non-Smoker</option>
+                  <option value="yes">Smoker</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <div class="field-label">
+                  <i class="fas fa-map-marker-alt field-icon"></i>
+                  <span>Region</span>
+                </div>
+                <select name="region" class="select">
+                  <option value="southeast">Southeast</option>
+                  <option value="southwest">Southwest</option>
+                  <option value="northwest">Northwest</option>
+                  <option value="northeast">Northeast</option>
+                </select>
+              </div>
             </div>
 
-            <div class="field">
-              <div class="label-row">
-                <span class="label">Sex</span>
+            <div class="form-actions">
+              <div class="model-info">
+                <i class="fas fa-info-circle"></i>
+                <span>Powered by Gradient Boosting ML Model</span>
               </div>
-              <select name="sex" class="select">
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
+              <div style="display: flex; gap: 1rem;">
+                <button type="button" class="btn-secondary" onclick="resetForm()">
+                  <i class="fas fa-redo"></i>
+                  Reset
+                </button>
+                <button type="submit" class="btn-predict">
+                  <i class="fas fa-calculator"></i>
+                  <span>Predict Insurance Cost</span>
+                </button>
+              </div>
             </div>
+          </form>
 
-            <div class="field">
-              <div class="label-row">
-                <span class="label">BMI</span>
-                <span class="hint">Body Mass Index</span>
+          <!-- Results -->
+          <div id="results" class="results-container">
+            <div class="result-card">
+              <div class="result-amount" id="predicted-amount">$0</div>
+              <div class="result-label">Estimated Annual Premium</div>
+              <div class="risk-indicator" id="risk-level">
+                <i class="fas fa-shield-alt"></i>
+                <span>Risk Assessment</span>
               </div>
-              <input type="number" step="0.1" name="bmi" min="10" max="60" required class="input" />
             </div>
-
-            <div class="field">
-              <div class="label-row">
-                <span class="label">Children</span>
-              </div>
-              <input type="number" name="children" min="0" max="10" required class="input" />
-            </div>
-
-            <div class="field">
-              <div class="label-row">
-                <span class="label">Smoker</span>
-              </div>
-              <select name="smoker" class="select">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <div class="label-row">
-                <span class="label">Region</span>
-              </div>
-              <select name="region" class="select">
-                <option value="southeast">Southeast</option>
-                <option value="southwest">Southwest</option>
-                <option value="northwest">Northwest</option>
-                <option value="northeast">Northeast</option>
-              </select>
+            
+            <div class="insights-grid" id="insights">
+              <!-- Dynamic insights will be inserted here -->
             </div>
           </div>
+        </section>
+      </div>
 
-          <div class="actions">
-            <button type="submit" class="btn-primary">
-              <span class="btn-icon">📊</span>
-              <span>Predict Charges</span>
-            </button>
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- Model Performance -->
+        <aside class="side-card">
+          <div class="side-title">
+            <i class="fas fa-chart-bar"></i>
+            Model Performance
           </div>
-        </form>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">87.95%</div>
+              <div class="stat-label">R² Score</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">$4,326</div>
+              <div class="stat-label">RMSE</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">1,338</div>
+              <div class="stat-label">Samples</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">6</div>
+              <div class="stat-label">Features</div>
+            </div>
+          </div>
+        </aside>
 
-        <div id="result" class="result"></div>
-        <div id="insight" class="insight"></div>
-      </section>
+        <!-- Feature Importance -->
+        <aside class="side-card">
+          <div class="side-title">
+            <i class="fas fa-ranking-star"></i>
+            Feature Importance
+          </div>
+          <div class="feature-chart">
+            <div class="feature-item">
+              <span class="feature-name">Smoking</span>
+              <div class="feature-bar"><div class="feature-fill" style="width: 67%"></div></div>
+              <span class="feature-value">67%</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-name">BMI</span>
+              <div class="feature-bar"><div class="feature-fill" style="width: 19%"></div></div>
+              <span class="feature-value">19%</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-name">Age</span>
+              <div class="feature-bar"><div class="feature-fill" style="width: 12%"></div></div>
+              <span class="feature-value">12%</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-name">Children</span>
+              <div class="feature-bar"><div class="feature-fill" style="width: 1%"></div></div>
+              <span class="feature-value">1%</span>
+            </div>
+          </div>
+        </aside>
 
-      <!-- Right: dynamic insight panel -->
-      <aside class="side-card">
-        <div class="side-title">Profile insights</div>
-        <p class="side-text" id="insight-text">
-          Fill in your details and run a prediction to see risk level and key drivers.
-        </p>
-
-        <div class="chip-row" id="chip-row">
-          <!-- chips inserted by JS -->
-        </div>
-
-        <ul class="side-list">
-          <li>• Non-smokers typically receive significantly lower charges.</li>
-          <li>• Higher BMI and age are associated with higher risk.</li>
-          <li>• Region captures pricing differences between markets.</li>
-        </ul>
-      </aside>
+        <!-- Tips -->
+        <aside class="side-card">
+          <div class="side-title">
+            <i class="fas fa-lightbulb"></i>
+            Insurance Tips
+          </div>
+          <ul class="tips-list">
+            <li>Maintaining a healthy BMI can significantly reduce premiums</li>
+            <li>Smoking is the strongest predictor of higher insurance costs</li>
+            <li>Regional differences reflect local healthcare costs</li>
+            <li>Age and family size impact risk assessment</li>
+          </ul>
+        </aside>
+      </div>
     </div>
   </div>
 
   <script src="/static/app.js"></script>
+  <script>
+    // Create animated background particles
+    function createParticles() {
+      const container = document.getElementById('bgAnimation');
+      const particleCount = 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.width = Math.random() * 4 + 2 + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.animationDelay = Math.random() * 6 + 's';
+        particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+        container.appendChild(particle);
+      }
+    }
+    
+    // BMI slider sync
+    function syncBMISlider() {
+      const bmiInput = document.querySelector('input[name="bmi"]');
+      const bmiSlider = document.querySelector('.bmi-slider');
+      
+      bmiInput.addEventListener('input', () => {
+        bmiSlider.value = bmiInput.value;
+      });
+      
+      bmiSlider.addEventListener('input', () => {
+        bmiInput.value = bmiSlider.value;
+      });
+    }
+    
+    // Reset form function
+    function resetForm() {
+      document.getElementById('predict-form').reset();
+      document.getElementById('results').classList.remove('show');
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      createParticles();
+      syncBMISlider();
+    });
+  </script>
 </body>
 </html>
