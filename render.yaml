@@ -2,6 +2,11 @@ services:
   - type: web
     name: insurance-predictor
     env: python
-    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
-    startCommand: cd app/app && python -m uvicorn main:app --host 0.0.0.0 --port ${PORT:-10000}
+    buildCommand: pip install --upgrade pip && pip cache purge && pip install -r requirements.txt
+    startCommand: cd app/app && python -m uvicorn main:app --host 0.0.0.0 --port ${PORT:-10000} --reload
     plan: free
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: DEPLOYMENT_ID
+        value: "20241129_v5"
