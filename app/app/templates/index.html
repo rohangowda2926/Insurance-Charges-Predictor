@@ -651,6 +651,146 @@
       }
     }
 
+    /* BMI Calculator Modal */
+    .bmi-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .bmi-modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .bmi-calculator {
+      background: rgba(51, 65, 85, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      max-width: 400px;
+      width: 90%;
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+
+    .bmi-modal.show .bmi-calculator {
+      transform: scale(1);
+    }
+
+    .bmi-calc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .bmi-calc-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .bmi-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .bmi-close:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .bmi-calc-grid {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .bmi-result {
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .bmi-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .bmi-category {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .bmi-calc-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+
+    .btn-bmi {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-bmi.primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+    }
+
+    .btn-bmi.secondary {
+      background: transparent;
+      border: 2px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .btn-bmi:hover {
+      transform: translateY(-2px);
+    }
+
+    .bmi-calc-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 0.75rem;
+      cursor: pointer;
+      text-decoration: underline;
+      margin-left: 0.5rem;
+    }
+
     /* Dark mode enhancements */
     @media (prefers-color-scheme: dark) {
       :root {
@@ -731,8 +871,11 @@
                   <i class="fas fa-weight field-icon"></i>
                   <span>BMI</span>
                   <span class="field-hint">Body Mass Index</span>
+                  <button type="button" class="bmi-calc-btn" onclick="openBMICalculator()">
+                    <i class="fas fa-calculator"></i> Calculate
+                  </button>
                 </div>
-                <input type="number" step="0.1" name="bmi" min="10" max="60" required class="input" placeholder="25.0" />
+                <input type="number" step="0.1" name="bmi" min="10" max="60" required class="input" placeholder="25.0" id="bmi-input" />
                 <input type="range" class="bmi-slider" min="15" max="50" step="0.1" />
                 <div class="bmi-labels">
                   <span>Underweight</span>
@@ -884,6 +1027,67 @@
     </div>
   </div>
 
+  <!-- BMI Calculator Modal -->
+  <div id="bmi-modal" class="bmi-modal">
+    <div class="bmi-calculator">
+      <div class="bmi-calc-header">
+        <h3 class="bmi-calc-title">
+          <i class="fas fa-calculator"></i>
+          BMI Calculator
+        </h3>
+        <button class="bmi-close" onclick="closeBMICalculator()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="bmi-calc-grid">
+        <div class="field">
+          <div class="field-label">
+            <i class="fas fa-ruler-vertical field-icon"></i>
+            <span>Height</span>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="number" id="height-ft" placeholder="5" class="input" style="flex: 1;" min="3" max="8">
+            <span style="align-self: center; color: var(--text-muted);">ft</span>
+            <input type="number" id="height-in" placeholder="8" class="input" style="flex: 1;" min="0" max="11">
+            <span style="align-self: center; color: var(--text-muted);">in</span>
+          </div>
+          <div style="margin-top: 0.5rem; text-align: center;">
+            <span style="color: var(--text-muted); font-size: 0.75rem;">OR</span>
+          </div>
+          <input type="number" id="height-cm" placeholder="173" class="input" step="0.1" min="100" max="250">
+          <span style="font-size: 0.75rem; color: var(--text-muted);">cm</span>
+        </div>
+        
+        <div class="field">
+          <div class="field-label">
+            <i class="fas fa-weight-hanging field-icon"></i>
+            <span>Weight</span>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="number" id="weight-lbs" placeholder="150" class="input" style="flex: 1;" min="50" max="500">
+            <span style="align-self: center; color: var(--text-muted);">lbs</span>
+          </div>
+          <div style="margin-top: 0.5rem; text-align: center;">
+            <span style="color: var(--text-muted); font-size: 0.75rem;">OR</span>
+          </div>
+          <input type="number" id="weight-kg" placeholder="68" class="input" step="0.1" min="20" max="200">
+          <span style="font-size: 0.75rem; color: var(--text-muted);">kg</span>
+        </div>
+      </div>
+      
+      <div id="bmi-result" class="bmi-result" style="display: none;">
+        <div class="bmi-value" id="calculated-bmi">0.0</div>
+        <div class="bmi-category" id="bmi-category-text">Enter height and weight</div>
+      </div>
+      
+      <div class="bmi-calc-actions">
+        <button class="btn-bmi secondary" onclick="closeBMICalculator()">Cancel</button>
+        <button class="btn-bmi primary" onclick="useBMI()" id="use-bmi-btn" disabled>Use This BMI</button>
+      </div>
+    </div>
+  </div>
+
   <script src="/static/app.js?v=5.0&t=1732890000"></script>
   <script>
     // Create animated background particles
@@ -924,10 +1128,132 @@
       document.getElementById('results').classList.remove('show');
     }
     
+    // BMI Calculator Functions
+    let calculatedBMI = 0;
+    
+    function openBMICalculator() {
+      document.getElementById('bmi-modal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeBMICalculator() {
+      document.getElementById('bmi-modal').classList.remove('show');
+      document.body.style.overflow = '';
+      resetBMICalculator();
+    }
+    
+    function resetBMICalculator() {
+      document.getElementById('height-ft').value = '';
+      document.getElementById('height-in').value = '';
+      document.getElementById('height-cm').value = '';
+      document.getElementById('weight-lbs').value = '';
+      document.getElementById('weight-kg').value = '';
+      document.getElementById('bmi-result').style.display = 'none';
+      document.getElementById('use-bmi-btn').disabled = true;
+      calculatedBMI = 0;
+    }
+    
+    function calculateBMI() {
+      const heightFt = parseFloat(document.getElementById('height-ft').value) || 0;
+      const heightIn = parseFloat(document.getElementById('height-in').value) || 0;
+      const heightCm = parseFloat(document.getElementById('height-cm').value) || 0;
+      const weightLbs = parseFloat(document.getElementById('weight-lbs').value) || 0;
+      const weightKg = parseFloat(document.getElementById('weight-kg').value) || 0;
+      
+      let heightInMeters = 0;
+      let weightInKg = 0;
+      
+      // Convert height to meters
+      if (heightCm > 0) {
+        heightInMeters = heightCm / 100;
+      } else if (heightFt > 0 || heightIn > 0) {
+        const totalInches = (heightFt * 12) + heightIn;
+        heightInMeters = totalInches * 0.0254;
+      }
+      
+      // Convert weight to kg
+      if (weightKg > 0) {
+        weightInKg = weightKg;
+      } else if (weightLbs > 0) {
+        weightInKg = weightLbs * 0.453592;
+      }
+      
+      if (heightInMeters > 0 && weightInKg > 0) {
+        calculatedBMI = weightInKg / (heightInMeters * heightInMeters);
+        
+        document.getElementById('calculated-bmi').textContent = calculatedBMI.toFixed(1);
+        document.getElementById('bmi-category-text').textContent = getBMICategory(calculatedBMI);
+        document.getElementById('bmi-result').style.display = 'block';
+        document.getElementById('use-bmi-btn').disabled = false;
+      } else {
+        document.getElementById('bmi-result').style.display = 'none';
+        document.getElementById('use-bmi-btn').disabled = true;
+      }
+    }
+    
+    function useBMI() {
+      if (calculatedBMI > 0) {
+        document.getElementById('bmi-input').value = calculatedBMI.toFixed(1);
+        document.querySelector('.bmi-slider').value = calculatedBMI.toFixed(1);
+        closeBMICalculator();
+      }
+    }
+    
+    function syncHeightInputs() {
+      const heightFt = document.getElementById('height-ft');
+      const heightIn = document.getElementById('height-in');
+      const heightCm = document.getElementById('height-cm');
+      
+      [heightFt, heightIn].forEach(input => {
+        input.addEventListener('input', () => {
+          if (input.value) {
+            heightCm.value = '';
+          }
+          calculateBMI();
+        });
+      });
+      
+      heightCm.addEventListener('input', () => {
+        if (heightCm.value) {
+          heightFt.value = '';
+          heightIn.value = '';
+        }
+        calculateBMI();
+      });
+    }
+    
+    function syncWeightInputs() {
+      const weightLbs = document.getElementById('weight-lbs');
+      const weightKg = document.getElementById('weight-kg');
+      
+      weightLbs.addEventListener('input', () => {
+        if (weightLbs.value) {
+          weightKg.value = '';
+        }
+        calculateBMI();
+      });
+      
+      weightKg.addEventListener('input', () => {
+        if (weightKg.value) {
+          weightLbs.value = '';
+        }
+        calculateBMI();
+      });
+    }
+    
+    // Close modal on outside click
+    document.getElementById('bmi-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'bmi-modal') {
+        closeBMICalculator();
+      }
+    });
+    
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       createParticles();
       syncBMISlider();
+      syncHeightInputs();
+      syncWeightInputs();
     });
   </script>
 </body>
