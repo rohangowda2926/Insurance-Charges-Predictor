@@ -876,7 +876,7 @@
                   </button>
                 </div>
                 <input type="number" step="0.1" name="bmi" min="10" max="60" required class="input" placeholder="25.0" id="bmi-input" />
-                <input type="range" class="bmi-slider" min="15" max="50" step="0.1" />
+                <input type="range" class="bmi-slider" min="10" max="60" step="0.1" />
                 <div class="bmi-labels">
                   <span>Underweight</span>
                   <span>Normal</span>
@@ -1181,14 +1181,27 @@
       if (heightInMeters > 0 && weightInKg > 0) {
         calculatedBMI = weightInKg / (heightInMeters * heightInMeters);
         
-        document.getElementById('calculated-bmi').textContent = calculatedBMI.toFixed(1);
-        document.getElementById('bmi-category-text').textContent = getBMICategory(calculatedBMI);
-        document.getElementById('bmi-result').style.display = 'block';
-        document.getElementById('use-bmi-btn').disabled = false;
+        // Validate BMI range
+        if (calculatedBMI >= 10 && calculatedBMI <= 60) {
+          document.getElementById('calculated-bmi').textContent = calculatedBMI.toFixed(1);
+          document.getElementById('bmi-category-text').textContent = getBMICategory(calculatedBMI);
+          document.getElementById('bmi-result').style.display = 'block';
+          document.getElementById('use-bmi-btn').disabled = false;
+        } else {
+          document.getElementById('bmi-result').style.display = 'none';
+          document.getElementById('use-bmi-btn').disabled = true;
+        }
       } else {
         document.getElementById('bmi-result').style.display = 'none';
         document.getElementById('use-bmi-btn').disabled = true;
       }
+    }
+    
+    function getBMICategory(bmi) {
+      if (bmi < 18.5) return "Underweight";
+      if (bmi < 25) return "Normal Weight";
+      if (bmi < 30) return "Overweight";
+      return "Obese";
     }
     
     function useBMI() {
@@ -1245,6 +1258,20 @@
     document.getElementById('bmi-modal').addEventListener('click', (e) => {
       if (e.target.id === 'bmi-modal') {
         closeBMICalculator();
+      }
+    });
+    
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.getElementById('bmi-modal').classList.contains('show')) {
+        closeBMICalculator();
+      }
+    });
+    
+    // Enter key to use BMI
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && document.getElementById('bmi-modal').classList.contains('show') && !document.getElementById('use-bmi-btn').disabled) {
+        useBMI();
       }
     });
     
