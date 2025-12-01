@@ -5,9 +5,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const riskLevel = document.getElementById("risk-level");
   const insights = document.getElementById("insights");
 
-  // Enhanced form submission with animations
+  // Enhanced form submission with validation
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
 
     const formData = new FormData(form);
     const payload = {
@@ -219,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 3000);
   }
 
-  // Form validation with real-time feedback
+  // Enhanced form validation
   const inputs = form.querySelectorAll('input, select');
   inputs.forEach(input => {
     input.addEventListener('input', validateField);
@@ -228,30 +232,67 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function validateField(e) {
     const field = e.target;
-    const value = field.value;
-    let isValid = true;
-    let message = '';
-
-    // Validation rules
-    if (field.name === 'age') {
-      isValid = value >= 18 && value <= 100;
-      message = isValid ? '' : 'Age must be between 18 and 100';
-    } else if (field.name === 'bmi') {
-      isValid = value >= 10 && value <= 60;
-      message = isValid ? '' : 'BMI must be between 10 and 60';
-    } else if (field.name === 'children') {
-      isValid = value >= 0 && value <= 10;
-      message = isValid ? '' : 'Children must be between 0 and 10';
+    const value = parseFloat(field.value);
+    const fieldContainer = field.closest('.field');
+    let existingWarning = fieldContainer.querySelector('.field-warning');
+    
+    // Remove existing warnings
+    if (existingWarning) {
+      existingWarning.remove();
     }
+    field.classList.remove('warning');
 
-    // Update field styling
-    if (value && !isValid) {
-      field.style.borderColor = 'var(--danger)';
-      field.style.boxShadow = '0 0 0 4px rgba(239, 68, 68, 0.1)';
-    } else {
-      field.style.borderColor = '';
-      field.style.boxShadow = '';
+    // Validation and warnings
+    if (field.name === 'age' && field.value) {
+      if (value < 18 || value > 64) {
+        showFieldWarning(fieldContainer, '⚠ Model trained on ages 18-64. Predictions may be less reliable.');
+        field.classList.add('warning');
+      }
+    } else if (field.name === 'bmi' && field.value) {
+      if (value < 15.96 || value > 53.13) {
+        showFieldWarning(fieldContainer, '⚠ Model trained on BMI 15.96-53.13. Predictions may be less reliable.');
+        field.classList.add('warning');
+      }
     }
+  }
+
+  function showFieldWarning(container, message) {
+    const warning = document.createElement('div');
+    warning.className = 'field-warning';
+    warning.innerHTML = `<i class="fas fa-exclamation-triangle"></i><span>${message}</span>`;
+    container.appendChild(warning);
+  }
+
+  function validateForm() {
+    const formData = new FormData(form);
+    const errors = [];
+
+    // Check required fields
+    if (!formData.get('age') || formData.get('age') <= 0) errors.push('Age is required and must be positive');
+    if (!formData.get('sex')) errors.push('Gender must be selected');
+    if (!formData.get('bmi') || formData.get('bmi') <= 0) errors.push('BMI is required and must be positive');
+    if (!formData.get('children') || formData.get('children') < 0) errors.push('Children must be 0 or greater');
+    if (!formData.get('smoker')) errors.push('Smoking status must be selected');
+    if (!formData.get('region')) errors.push('Region must be selected');
+
+    if (errors.length > 0) {
+      showValidationError('Please fill all fields with valid values: ' + errors.join(', '));
+      return false;
+    }
+    return true;
+  }
+
+  function showValidationError(message) {
+    const error = document.createElement('div');
+    error.className = 'validation-error';
+    error.innerHTML = `<i class="fas fa-exclamation-circle"></i><span>${message}</span>`;
+    document.body.appendChild(error);
+    
+    setTimeout(() => error.classList.add('show'), 100);
+    setTimeout(() => {
+      error.classList.remove('show');
+      setTimeout(() => document.body.removeChild(error), 300);
+    }, 5000);
   }
 
   // Add pulse animation keyframes
