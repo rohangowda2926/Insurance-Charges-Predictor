@@ -99,24 +99,35 @@ Insurance-Prediction-/
 │       │   └── app.js          # Frontend JavaScript
 │       └── templates/
 │           └── index.html      # Main HTML template
+├── aws/
+│   ├── cloudformation.yaml     # AWS CloudFormation template
+│   ├── deploy.sh               # AWS deployment script
+│   ├── lambda_function.py      # AWS Lambda function
+│   ├── requirements.txt        # AWS Lambda dependencies
+│   └── README.md               # AWS deployment guide
 ├── ml/
 │   ├── insurance.csv           # Training dataset (1,338 records)
 │   └── train_model.py          # Model training script
 ├── notebooks/
 │   ├── model_evaluation.py     # Model metrics & visualizations
-│   └── eda_analysis.py         # Exploratory data analysis
+│   ├── eda_analysis.py         # Exploratory data analysis
+│   └── requirements.txt        # Analysis dependencies
 ├── docs/
 │   ├── index.html              # GitHub Pages version
+│   ├── app-screenshot.png      # Application screenshot
 │   ├── model_evaluation.png    # Model performance plots
-│   ├── eda_analysis.png        # EDA visualizations
 │   └── static/
 │       └── app.js              # Frontend for GitHub Pages
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml          # GitHub Actions workflow
+├── ec2-deploy.sh               # EC2 deployment automation
+├── systemd-service.txt         # Systemd service configuration
 ├── extract_coefficients.py     # Model analysis utility
+├── render.yaml                 # Render deployment config
 ├── requirements.txt            # Root dependencies
 ├── runtime.txt                 # Python version for deployment
+├── DATASET.md                  # Dataset documentation
 └── README.md
 ```
 
