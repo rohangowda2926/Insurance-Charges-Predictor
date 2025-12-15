@@ -76,7 +76,7 @@ def perform_eda():
     
     # 8. Correlation heatmap
     plt.subplot(3, 4, 8)
-    # Encode categorical variables for correlation
+    # Encode categorical variables for the correlation
     df_encoded = pd.get_dummies(df)
     correlation_matrix = df_encoded.corr()
     sns.heatmap(correlation_matrix[['charges']].sort_values('charges', ascending=False), 
